@@ -1,0 +1,31 @@
+server:
+  port: ${PORT:8080}
+
+spring:
+  application:
+    name: response-lens-backend
+  datasource:
+    # Restored your Neon URL as the default to fix the "Property not found" errors
+    url: ${DB_URL:jdbc:postgresql://ep-blue-lab-aocz4f6c-pooler.c-2.ap-southeast-1.aws.neon.tech/responselens?sslmode=require}
+    username: ${DB_USERNAME:neondb_owner}
+    password: ${DB_PASSWORD:npg_urAnVQNB0do6}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    open-in-view: false
+
+app:
+  jwt:
+    # Restored secret as default
+    secret: ${JWT_SECRET:responselensSuperSecureJwtSecretKey2026}
+    expiration-ms: ${JWT_EXPIRATION:86400000}
+  cors:
+    allowed-origins: ${CORS_ORIGINS:http://localhost:5173,http://localhost:3000}
+
+gemini:
+  api:
+    # Restored Gemini key as default
+    key: ${GEMINI_API_KEY:AIzaSyDSFUoMQoV4rotZSzT6lDEdGw4KKGqdbao}
+    url: https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent
