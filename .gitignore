@@ -1,0 +1,38 @@
+# IDEs
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Build and Dependencies
+target/
+node_modules/
+dist/
+build/
+.mvn/
+mvnw
+mvnw.cmd
+
+# Guides and Metadata
+*_GUIDE.md
+PROJECT_SYSTEM_GUIDE.md
+.gitattributes
+
+# Logs
+*.log
+
+# Sensitive Files (Secrets)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+backend/.env
+frontend/.env
+
+# Project Review and Interview Prep Guide
+PROJECT_REVIEW.md
+
+# Operating System
+.DS_Store
+Thumbs.db

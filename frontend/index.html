@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ResponseLens</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+    <script>
+      // --- TASK 4 FIX START: Frontend environment variable validation ---
+      // Validate VITE_API_BASE_URL at runtime
+      if (!import.meta.env.VITE_API_BASE_URL) {
+        console.error('CRITICAL: VITE_API_BASE_URL is not defined. Please check your .env file.');
+        document.getElementById('root').innerHTML = `
+          <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; background-color: #1a202c; color: #e2e8f0; font-family: sans-serif;">
+            <h1 style="color: #f56565;">Configuration Error</h1>
+            <p>VITE_API_BASE_URL is not defined. Please check your .env file in the frontend directory.</p>
+            <p>Example: <code>VITE_API_BASE_URL=http://localhost:8080/api/v1</code></p>
+            <p>Application cannot start without this configuration.</p>
+          </div>
+        `;
+      }
+      // --- TASK 4 FIX END ---
+    </script>
+  </body>
+</html>
