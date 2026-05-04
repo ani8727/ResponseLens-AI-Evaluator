@@ -20,12 +20,10 @@ public class Prompt {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Lob
-    @Column(nullable = false)
+    @Column(columnDefinition = "TEXT")
     private String promptText;
 
-    @Lob
-    @Column
+    @Column(columnDefinition = "TEXT")
     private String aiResponse;
 
     @Enumerated(EnumType.STRING)

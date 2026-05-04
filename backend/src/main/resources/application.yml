@@ -1,14 +1,18 @@
 server:
-  port: 8080
+  port: 8081
 
 spring:
+  profiles:
+      active: local
   application:
     name: response-lens-backend
+
   datasource:
-    url: jdbc:postgresql://ep-blue-lab-aocz4f6c-pooler.c-2.ap-southeast-1.aws.neon.tech/responselens?sslmode=require
-    username: neondb_owner
-    password: npg_urAnVQNB0do6
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
+
   jpa:
     hibernate:
       ddl-auto: update
@@ -20,14 +24,13 @@ spring:
 
 app:
   jwt:
-    # IMPORTANT: Use a secret that is at least 64 characters long for HS512, or 32 for HS256.
-    # This value should be set via environment variable in production.
-    secret: ${JWT_SECRET:responselens_super_secure_jwt_secret_key_for_2026_production_at_least_64_chars_long_and_random}
+    secret: ${JWT_SECRET}
     expiration-ms: 86400000
+
   cors:
-    allowed-origins: http://localhost:3000,http://localhost:5173
+    allowed-origins: ${CORS_ORIGINS:http://localhost:5173}
 
 gemini:
   api:
-    key: AIzaSyBct6eZAXgVofxXIm7B_ZmDP8lrIO6IkNE
-    url: https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent
+    key: ${GEMINI_API_KEY}
+    url: ${GEMINI_API_URL:https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent}

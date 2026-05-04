@@ -31,7 +31,7 @@ public final class MapperUtil {
                 .status(prompt.getStatus())
                 .errorMessage(prompt.getErrorMessage())
                 // --- FIX END ---
-                .createdByUserId(prompt.getCreatedBy().getId())
+                .createdByUserId(prompt.getCreatedBy() != null ? prompt.getCreatedBy().getId() : null)
                 .createdAt(prompt.getCreatedAt())
                 // Scores are null by default as they come from manual Evaluation
                 // Frontend handles null as "N/A"
