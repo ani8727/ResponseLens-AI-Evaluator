@@ -1,66 +1,44 @@
-import { NavLink } from 'react-router-dom'
-import { useAuth } from '../../hooks/useAuth.js'
+import React from "react";
+import { Link } from "react-router-dom";
 
-const userLinks = [
-  { to: '/dashboard', label: 'Dashboard' },
-  { to: '/history', label: 'Prompt History' },
-  { to: '/evaluation', label: 'Evaluation' },
-  { to: '/profile', label: 'Profile' },
-]
-
-const adminLinks = [
-  { to: '/admin-dashboard', label: 'Admin Dashboard' },
-]
-
-function Sidebar() {
-  const { isAdmin } = useAuth()
-
+export default function Sidebar({ open, onClose }) {
   return (
-    <aside className="hidden w-64 border-r border-slate-800 bg-slate-900/70 p-6 md:block">
-      <h1 className="text-xl font-semibold text-cyan-500">ResponseLens</h1>
-      <p className="mt-1 text-xs text-slate-400">AI Evaluation Platform</p>
-      <nav className="mt-8 space-y-2">
-        {userLinks.map((link) => (
-          <NavLink
-            key={link.to}
-            to={link.to}
-            className={({ isActive }) =>
-              `block rounded-lg px-3 py-2 text-sm transition ${
-                isActive
-                  ? 'bg-cyan-500/20 text-cyan-200'
-                  : 'text-slate-300 hover:bg-slate-800 hover:text-white'
-              }`
-            }
-          >
-            {link.label}
-          </NavLink>
-        ))}
+    <>
+      {/* Overlay for mobile */}
+      <div
+        className={`fixed inset-0 bg-black bg-opacity-40 z-30 lg:hidden transition-opacity ${open ? "opacity-100" : "opacity-0 pointer-events-none"}`}
+        onClick={onClose}
+      />
 
-        {isAdmin && (
-          <>
-            <div className="mt-6 border-t border-slate-700 pt-6">
-              <p className="text-xs font-semibold uppercase text-slate-500">Admin</p>
-            </div>
-            {adminLinks.map((link) => (
-              <NavLink
-                key={link.to}
-                to={link.to}
-                className={({ isActive }) =>
-                  `block rounded-lg px-3 py-2 text-sm transition ${
-                    isActive
-                      ? 'bg-cyan-500/20 text-cyan-200'
-                      : 'text-slate-300 hover:bg-slate-800 hover:text-white'
-                  }`
-                }
-              >
-                {link.label}
-              </NavLink>
-            ))}
-          </>
-        )}
-      </nav>
-    </aside>
-  )
+      <aside
+        className={`fixed z-40 left-0 top-0 h-full w-64 bg-white dark:bg-gray-900 border-r dark:border-gray-800 transform lg:translate-x-0 transition-transform ${open ? "translate-x-0" : "-translate-x-full"} lg:relative lg:translate-x-0`}
+      >
+        <div className="p-4">
+          <nav className="space-y-2">
+            <Link
+              to="/dashboard"
+              onClick={onClose}
+              className="block px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800"
+            >
+              Dashboard
+            </Link>
+            <Link
+              to="/history"
+              onClick={onClose}
+              className="block px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800"
+            >
+              History
+            </Link>
+            <Link
+              to="/profile"
+              onClick={onClose}
+              className="block px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800"
+            >
+              Profile
+            </Link>
+          </nav>
+        </div>
+      </aside>
+    </>
+  );
 }
-
-export default Sidebar

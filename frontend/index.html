@@ -1,29 +1,47 @@
 <!doctype html>
-<html lang="en">
+<html>
   <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ResponseLens</title>
+    <title>frontend</title>
   </head>
   <body>
     <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-    <script>
-      // --- TASK 4 FIX START: Frontend environment variable validation ---
-      // Validate VITE_API_BASE_URL at runtime
-      if (!import.meta.env.VITE_API_BASE_URL) {
-        console.error('CRITICAL: VITE_API_BASE_URL is not defined. Please check your .env file.');
-        document.getElementById('root').innerHTML = `
-          <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; background-color: #1a202c; color: #e2e8f0; font-family: sans-serif;">
-            <h1 style="color: #f56565;">Configuration Error</h1>
-            <p>VITE_API_BASE_URL is not defined. Please check your .env file in the frontend directory.</p>
-            <p>Example: <code>VITE_API_BASE_URL=http://localhost:8080/api/v1</code></p>
-            <p>Application cannot start without this configuration.</p>
+
+    <script type="module">
+      // Validate required runtime env before loading the app
+      const apiBase = import.meta.env.VITE_API_BASE_URL;
+
+      function showError(message) {
+        const root = document.getElementById('root');
+        root.innerHTML = '';
+        const container = document.createElement('div');
+        container.style.fontFamily = 'Inter, system-ui, Arial, sans-serif';
+        container.style.display = 'flex';
+        container.style.alignItems = 'center';
+        container.style.justifyContent = 'center';
+        container.style.minHeight = '100vh';
+        container.style.padding = '1rem';
+        container.innerHTML = `
+          <div style="max-width:720px;text-align:center;">
+            <h1 style="color:#b91c1c;">Configuration error</h1>
+            <p style="color:#333;">${message}</p>
+            <p style="color:#666;font-size:0.9rem;">Please set <strong>VITE_API_BASE_URL</strong> in your <code>.env</code> or environment.</p>
           </div>
         `;
+        root.appendChild(container);
       }
-      // --- TASK 4 FIX END ---
+
+      if (!apiBase) {
+        showError('Missing required environment variable: VITE_API_BASE_URL');
+        // do not load the app
+      } else {
+        // Dynamically load the app entry so validation runs first
+        const script = document.createElement('script');
+        script.type = 'module';
+        script.src = '/src/main.jsx';
+        document.body.appendChild(script);
+      }
     </script>
   </body>
 </html>

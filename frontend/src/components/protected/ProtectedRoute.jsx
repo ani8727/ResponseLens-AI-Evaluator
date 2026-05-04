@@ -1,24 +1,15 @@
-import { Navigate, useLocation } from 'react-router-dom'
-import { useAuth } from '../../hooks/useAuth.js'
-import LoadingSpinner from '../common/LoadingSpinner.jsx'
+import React from "react";
+import { Navigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 
-function ProtectedRoute({ children }) {
-  const { isAuthenticated, isLoading } = useAuth()
-  const location = useLocation()
+export default function ProtectedRoute({ children }) {
+  const { isAuthenticated, loading } = useAuth();
 
-  if (isLoading) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-slate-950">
-        <LoadingSpinner label="Verifying your session..." />
-      </div>
-    )
-  }
+  if (loading) return null;
 
   if (!isAuthenticated) {
-    return <Navigate to="/login" replace state={{ from: location }} />
+    return <Navigate to="/login" replace />;
   }
 
-  return children
+  return children;
 }
-
-export default ProtectedRoute

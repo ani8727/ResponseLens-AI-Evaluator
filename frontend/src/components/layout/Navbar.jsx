@@ -1,40 +1,59 @@
-import { useAuth } from '../../hooks/useAuth.js'
-import { useTheme } from '../../hooks/useTheme.js'
+import React from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useTheme } from "../../context/ThemeContext";
+import { useAuth } from "../../context/AuthContext";
 
-function Navbar() {
-  const { user, logout } = useAuth()
-  const { isDarkMode, toggleTheme } = useTheme()
+export default function Navbar({ onOpenSidebar }) {
+  const { theme, toggleTheme } = useTheme();
+  const { logout, user } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
 
   return (
-    <nav className="flex items-center justify-between border-b border-slate-800 bg-slate-950 px-6 py-4">
-      <div className="flex items-center gap-2">
-        <div className="h-8 w-8 rounded-lg bg-cyan-600"></div>
-        <h1 className="text-xl font-bold text-white">ResponseLens</h1>
-      </div>
-
-      <div className="flex items-center gap-4">
-        <button
-          onClick={toggleTheme}
-          className="rounded-lg p-2 text-slate-400 hover:bg-slate-800"
-          aria-label={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
-        >
-          {isDarkMode ? '🌞 Light' : '🌙 Dark'}
-        </button>
-
-        {user && (
-          <div className="flex items-center gap-3">
-            <span className="text-sm font-medium text-slate-300">{user.name}</span>
+    <header className="w-full bg-white dark:bg-gray-900 border-b dark:border-gray-800">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16">
+          <div className="flex items-center">
             <button
-              onClick={logout}
-              className="rounded-lg bg-slate-800 px-3 py-1.5 text-sm font-medium text-white hover:bg-slate-700"
+              onClick={onOpenSidebar}
+              className="mr-3 inline-flex items-center p-2 rounded-md text-gray-500 hover:text-gray-700 dark:text-gray-300 lg:hidden"
+              aria-label="Open sidebar"
+            >
+              ☰
+            </button>
+            <Link
+              to="/"
+              className="text-lg font-semibold text-gray-800 dark:text-white"
+            >
+              ResponseLens
+            </Link>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <div className="text-sm text-gray-700 dark:text-gray-200">
+              {user?.name || ""}
+            </div>
+            <button
+              onClick={toggleTheme}
+              className="px-3 py-1 rounded-md bg-gray-100 dark:bg-gray-800 text-sm"
+              aria-label="Toggle theme"
+            >
+              {theme === "dark" ? "Light" : "Dark"}
+            </button>
+
+            <button
+              onClick={handleLogout}
+              className="px-3 py-1 rounded-md bg-red-50 text-red-700 text-sm"
             >
               Logout
             </button>
           </div>
-        )}
+        </div>
       </div>
-    </nav>
-  )
+    </header>
+  );
 }
-
-export default Navbar
