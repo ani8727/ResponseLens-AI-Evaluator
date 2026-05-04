@@ -12,6 +12,7 @@ build/
 .mvn/
 mvnw
 mvnw.cmd
+package-lock.json # Added this line
 
 # Guides and Metadata
 *_GUIDE.md
