@@ -36,3 +36,7 @@ PROJECT_REVIEW.md
 # Operating System
 .DS_Store
 Thumbs.db
+
+# Ignore local config
+application-local.yml
+.env
