@@ -3,45 +3,11 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Responselens-ai</title> <!-- Corrected capitalization here -->
+    <title>Responselens-ai</title>
   </head>
   <body>
     <div id="root"></div>
-
-    <script type="module">
-      // Validate required runtime env before loading the app
-      const apiBase = import.meta.env.VITE_API_BASE_URL;
-
-      function showError(message) {
-        const root = document.getElementById('root');
-        root.innerHTML = '';
-        const container = document.createElement('div');
-        container.style.fontFamily = 'Inter, system-ui, Arial, sans-serif';
-        container.style.display = 'flex';
-        container.style.alignItems = 'center';
-        container.style.justifyContent = 'center';
-        container.style.minHeight = '100vh';
-        container.style.padding = '1rem';
-        container.innerHTML = `
-          <div style="max-width:720px;text-align:center;">
-            <h1 style="color:#b91c1c;">Configuration error</h1>
-            <p style="color:#333;">${message}</p>
-            <p style="color:#666;font-size:0.9rem;">Please set <strong>VITE_API_BASE_URL</strong> in your <code>.env</code> or environment.</p>
-          </div>
-        `;
-        root.appendChild(container);
-      }
-
-      if (!apiBase) {
-        showError('Missing required environment variable: VITE_API_BASE_URL');
-        // do not load the app
-      } else {
-        // Dynamically load the app entry so validation runs first
-        const script = document.createElement('script');
-        script.type = 'module';
-        script.src = '/src/main.jsx';
-        document.body.appendChild(script);
-      }
-    </script>
+    <!-- Vite will automatically transform this script tag during build -->
+    <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
