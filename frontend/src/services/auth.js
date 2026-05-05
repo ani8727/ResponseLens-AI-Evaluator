@@ -1,18 +1,11 @@
-import { API_BASE_URL } from "../config";
+import axios from "../api/axiosClient";
 
 export async function loginUser({ email, password }) {
-  const res = await fetch(`${API_BASE_URL}/auth/login`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ email, password }),
-  });
+  const res = await axios.post("/auth/login", { email, password });
+  return res.data;
+}
 
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({}));
-    throw new Error(err.message || "Login failed");
-  }
-
-  return await res.json();
+export async function signupUser(payload) {
+  const res = await axios.post("/auth/signup", payload);
+  return res.data;
 }

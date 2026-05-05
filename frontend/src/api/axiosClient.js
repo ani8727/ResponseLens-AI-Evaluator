@@ -1,9 +1,22 @@
 import axios from "axios";
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8081'; // Added fallback
+// Single source of truth for API base URL: require VITE_API_BASE_URL
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 if (!API_BASE_URL) {
-  console.warn("⚠️ VITE_API_BASE_URL is not set");
+  console.error("Missing required environment variable: VITE_API_BASE_URL");
+}
+
+const TOKEN_KEY = "token";
+
+let onUnauthorizedCallback = null;
+
+export function setOnUnauthorized(callback) {
+  onUnauthorizedCallback = callback;
+}
+
+export function clearOnUnauthorized() {
+  onUnauthorizedCallback = null;
 }
 
 const axiosInstance = axios.create({
@@ -13,43 +26,53 @@ const axiosInstance = axios.create({
   },
 });
 
-function logout() {
-  localStorage.removeItem("token");
-  window.location.href = "/login";
-}
-
-// REQUEST INTERCEPTOR
+// REQUEST INTERCEPTOR: attach bearer token if present
 axiosInstance.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("token");
-
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+    try {
+      const token = localStorage.getItem(TOKEN_KEY);
+      if (token) {
+        config.headers = config.headers || {};
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+    } catch (e) {
+      // ignore storage errors
     }
-
     return config;
   },
   (error) => Promise.reject(error)
 );
 
-// RESPONSE INTERCEPTOR
+// RESPONSE INTERCEPTOR: normalize errors and surface unauthorized to a caller
 axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response) {
       const { status, data } = error.response;
 
+      const message = data?.message || data?.error || error.message || "API Error";
+
       if (status === 401) {
-        logout();
+        try {
+          localStorage.removeItem(TOKEN_KEY);
+        } catch (e) { }
+        if (typeof onUnauthorizedCallback === "function") {
+          try {
+            onUnauthorizedCallback();
+          } catch (e) { }
+        }
+        const err = new Error(message);
+        err.status = status;
+        return Promise.reject(err);
       }
 
-      const message =
-        data?.message || data?.error || "Something went wrong";
-
-      return Promise.reject({ message, status });
+      const err = new Error(message);
+      err.status = status;
+      return Promise.reject(err);
     }
 
-    return Promise.reject({ message: "Network Error" });
+    // network / no-response
+    return Promise.reject(new Error("Network Error"));
   }
 );
 

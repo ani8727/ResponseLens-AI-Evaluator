@@ -5,7 +5,10 @@ import React, {
   useEffect,
   useCallback,
 } from "react";
-import axios from "../api/axiosClient";
+import axios, {
+  setOnUnauthorized,
+  clearOnUnauthorized,
+} from "../api/axiosClient";
 
 const AuthContext = createContext(null);
 
@@ -100,6 +103,22 @@ export function AuthProvider({ children }) {
     // Initialize: try to restore session
     restoreSession();
   }, [restoreSession]);
+
+  useEffect(() => {
+    // Register a global unauthorized handler so the app state is cleared
+    setOnUnauthorized(() => {
+      try {
+        persistToken(null);
+      } catch (e) {}
+      setUser(null);
+      try {
+        // minimal redirect on 401 to ensure user lands on login
+        window.location.href = "/login";
+      } catch (e) {}
+    });
+    return () => clearOnUnauthorized();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const value = {
     user,
